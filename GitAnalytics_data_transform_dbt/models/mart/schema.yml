@@ -1,0 +1,24 @@
+version: 2
+
+models:
+    - name: dim_eventtype
+      description: Dimension tabel contains information about types of event in git
+
+    - name: dim_actors
+      description: Dimension tabel contains information about the users of git
+    
+    - name: dim_repo
+      description: Dimension table conatins information about the git repository
+
+    - name: dim_dates
+      description: Dimension table contains information about the date
+
+    - name: fact_gitanalytics
+      description: Fact table contains information about the facts of Git data
+
+    - name: view_gitanalytics
+      description: View build on dimensiona and fact table
+
+     
+
+      
