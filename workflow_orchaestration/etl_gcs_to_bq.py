@@ -18,8 +18,8 @@ from pathlib import Path
 
 
 @task(log_prints = True, name = "Reading from GCS bucket")
-def read_from_gcs_transform(y:int,m:int,bucket_name:str):
-    df = spark.read.parquet(f"gs://{bucket_name}/{y}/{m:02}/*/*")
+def read_from_gcs_transform(y:int,m:int,d:int,bucket_name:str):
+    df = spark.read.parquet(f"gs://{bucket_name}/{y}/{m:02}/{d:02}/*")
     df = df.withColumn("actor_id", col("actor.id"))
     df =df.withColumn("actor_login", col("actor.login"))
     df =df.withColumn("repo_id", col("repo.id"))
@@ -54,7 +54,7 @@ def read_from_gcs_transform(y:int,m:int,bucket_name:str):
 def write_to_bq(df, project_id, schema_name, table_name):
     print("started")
    
-    df_repartitioned = df.repartition(10)
+    df_repartitioned = df.repartition(40)
 
     # Write to BigQuery
     df_repartitioned.write \
@@ -71,12 +71,12 @@ def write_to_bq(df, project_id, schema_name, table_name):
 
 
 @flow(log_prints = True, name = "Github analytics data upload")
-def data_upload(y:int,m:int) -> None:
+def data_upload(y:int,m:int,d:int) -> None:
     bucket_name = "dataengineering1-433721_github_analytics"
     global spark 
     spark = config()
    
-    df = read_from_gcs_transform(y,m, bucket_name)
+    df = read_from_gcs_transform(y,m,d, bucket_name)
     project_id = "dataengineering1-433721"
     schema_name = "gitanalytics_de"
     table_name = "gitanalytics_raw_data"
@@ -89,15 +89,17 @@ def data_upload(y:int,m:int) -> None:
 
 
 @flow(log_prints = True, name = "Github analytics data upload timeframe")
-def data_timeframe(year_:list, month:list) -> None:
+def data_timeframe(year_:list, month:list, day:list) -> None:
     for y in year_:
         for m in month:
-            print(y,m)
-            data_upload(y,m)
+            for d in day:
+                print(y,m,d)
+                data_upload(y,m,d)
 
 
 
 if __name__ == "__main__":
     year_ = [2022]
     month = [1]
-    data_timeframe(year_,month)
+    day = [10]
+    data_timeframe(year_,month, day)
