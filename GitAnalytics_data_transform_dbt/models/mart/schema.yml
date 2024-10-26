@@ -16,7 +16,7 @@ models:
     - name: fact_gitanalytics
       description: Fact table contains information about the facts of Git data
 
-    - name: view_gitanalytics
+    - name: analytics_gitanalytics
       description: View build on dimensiona and fact table
 
      
