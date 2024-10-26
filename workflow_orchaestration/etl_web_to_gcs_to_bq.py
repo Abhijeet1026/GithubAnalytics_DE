@@ -27,6 +27,12 @@ def write_to_gcs(path:Path,y:int,m:int,d:int, bucket_name:str):
         f"gs://{bucket_name}/{y}/{m:02}/{d:02}", mode="overwrite"
     )
 
+@task(log_prints = True, name = "cleaning_local")
+def clean_local(path:Path):
+    os.system(f"rm -r {path}")
+    print(f"successfully removed content in {path}")
+    return None
+
 
 @flow(log_prints = True, name = "Github analytics data download using api")
 def data_api(y:int,m:int, d:int) -> None:
@@ -36,6 +42,7 @@ def data_api(y:int,m:int, d:int) -> None:
     spark = config()
     local_download(path, y, m ,d)
     write_to_gcs(path,y,m,d, bucket_name)
+    clean_local(path)
     spark.stop()
 
 @flow(log_prints = True, name = "Github analytics data download timeframe")
@@ -50,6 +57,6 @@ def data_timeframe(year_:list, month:list, day: list) -> None:
 if __name__ == "__main__":
     year_ = [2022]
     month = [1]
-    day = [1,2]
+    day = [1,2,3,4,5,6,7,8,9,10]
     data_timeframe(year_,month, day)
     
