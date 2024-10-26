@@ -1,11 +1,10 @@
-SELECT  
-    DISTINCT
-        actor_id, actor_login,
-    Case
-        when actor_login like "%[bot]%" Then "yes"
-        else "no"
-    end as is_bot,
+{{ config(materialized='view') }}
 
-    
-
+SELECT DISTINCT
+    actor_id,
+    actor_user_id,
+    CASE
+        WHEN actor_user_id LIKE '%[bot]%' THEN 'yes'
+        ELSE 'no'
+    END AS is_bot
 FROM {{ ref('stg_gitAnalytics') }}

@@ -1,26 +1,27 @@
-with 
+{{ config(materialized='incremental', unique_key='id') }}
 
-source as (
-
-    select * from {{source('staging', 'gitanalytics_raw_data')}}
+WITH source AS (
+    SELECT * FROM {{ source('staging', 'gitanalytics_raw_data') }}
 ),
 
-renamed as (
-
-    select 
-       id,
-       {{map_event_type('type') }} as eventtype_key,
+renamed AS (
+    SELECT 
+       DISTINCT id,
+       {{ map_event_type('type') }} AS eventtype_key,
        type,
        created_at,
        actor_id,
-       actor_login,
+       actor_login as actor_user_id,
        repo_id,
        repo_name,
        payload_size,
        org_present
-    
-    from source
-
+    FROM source
 )
 
-select * from renamed
+SELECT * 
+FROM renamed
+
+{% if is_incremental() %}
+    WHERE DATE(created_at) > (SELECT COALESCE(MAX(DATE(created_at)), '1970-01-01') FROM {{ this }})
+{% endif %}
