@@ -1,6 +1,6 @@
 # GitHub Archive Data Engineering and Analytics Projects
 
-1. [Introduction](introduction)
+1. [Introduction](#introduction)
 2. [Objective](objective)
 3. Solution Design
 4. Data Pipeline
