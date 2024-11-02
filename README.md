@@ -22,3 +22,8 @@ The main objective of this project is as below:
 - Transform and load raw data from GCS into Google BigQuery as the data warehousing solution.
 - Use dbt Cloud to transform raw data into a star schema and create materialized views based on this schema for optimized analysis.
 - Visualize the data using Looker, leveraging materialized views for enhanced performance and insights.
+
+
+![architecture](https://github.com/user-attachments/assets/d0cb6269-84cb-4ed1-b005-cb5f59312afa)
+
+- 
