@@ -1,4 +1,4 @@
-# GitHub Archive Data Engineering and Analytics Projects
+# GitHub Archive Data Engineering and Analytics Project
 
 1. [Introduction](#introduction)
 2. [Objective](objective)
